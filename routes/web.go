@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"skeleton/app/http/controller/web"
 	"skeleton/app/utils/response"
 )
 
@@ -13,6 +14,12 @@ func InitWebRouters() *gin.Engine {
 	r.GET("/", func(c *gin.Context) {
 		response.Success(c, "This is Web")
 	})
+
+	manager := r.Group("/manager")
+	{
+		manager.GET("/user/list", web.UserLists)
+		manager.GET("/user/:uid", web.UserDetail)
+	}
 
 	return r
 }
