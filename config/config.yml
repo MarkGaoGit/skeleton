@@ -1,0 +1,17 @@
+Env: dev
+
+# 服务配置
+HttpServer:
+  Api:
+    Port: ":12345"
+  Web:
+    Port: ":34567"
+
+# 数据库配置
+Mysql:
+  Host: "127.0.0.1"
+  Port: 3306
+  User: "root"
+  Password: "123456"
+  Charset: "utf8mb4"
+  Databases: "dove"
