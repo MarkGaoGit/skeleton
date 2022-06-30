@@ -14,4 +14,4 @@ Mysql:
   User: "root"
   Password: "123456"
   Charset: "utf8mb4"
-  Databases: "dove"
+  Databases: "skeleton"
