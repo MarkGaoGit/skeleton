@@ -1,4 +1,4 @@
-package gorm_me
+package gormMe
 
 import (
 	"fmt"

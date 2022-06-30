@@ -1,11 +1,11 @@
-package yml_config
+package ymlConfig
 
 import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"log"
 	"skeleton/app/global/variable"
-	"skeleton/app/utils/yml_config/ymlconfig_interf"
+	"skeleton/app/utils/ymlConfig/ymlconfigInterf"
 	"time"
 )
 
@@ -15,8 +15,7 @@ func init() {
 	lastChangeTime = time.Now()
 }
 
-
-func CreateYamlFactory(fileName ...string) ymlconfig_interf.YmlConfigInterf {
+func CreateYamlFactory(fileName ...string) ymlconfigInterf.YmlConfigInterf {
 	v := viper.New()
 	v.AddConfigPath(variable.BasePath + "/config")
 	if len(fileName) == 0 {
@@ -53,7 +52,7 @@ func (y *ymlConfig) ConfigFileChangeListen() {
 }
 
 // Clone 允许 clone 一个相同功能的结构体
-func (y *ymlConfig) Clone(fileName string) ymlconfig_interf.YmlConfigInterf {
+func (y *ymlConfig) Clone(fileName string) ymlconfigInterf.YmlConfigInterf {
 	// 这里存在一个深拷贝，需要注意，避免拷贝的结构体操作对原始结构体造成影响
 	var ymlC = *y
 	var ymlConfViper = *(y.viper)
