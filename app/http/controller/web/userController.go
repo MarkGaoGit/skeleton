@@ -2,7 +2,9 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
+	"skeleton/app/global/consts"
 	"skeleton/app/http/service"
+	"skeleton/app/utils/encrypt"
 	"skeleton/app/utils/response"
 	"strconv"
 )
@@ -34,6 +36,29 @@ func (u *Users) UserDetail(c *gin.Context) {
 	response.Success(c, user)
 }
 
+// UserRegister 用户注册
 func (u *Users) UserRegister(c *gin.Context) {
-	response.Success(c, "ddd")
+	phone := c.GetString(consts.ValidatorPrefix + "phone")
+	userName := c.GetString(consts.ValidatorPrefix + "userName")
+	password := c.GetString(consts.ValidatorPrefix + "password")
+	openId := c.GetString(consts.ValidatorPrefix + "openId")
+	photo := c.GetString(consts.ValidatorPrefix + "photo")
+	createdTime := c.GetString(consts.ValidatorPrefix + "createdTime")
+
+	userId, err := service.UserRegister(map[string]string{
+		"phone":       phone,
+		"userName":    userName,
+		"password":    encrypt.Sha256(password),
+		"openId":      openId,
+		"photo":       photo,
+		"createdTime": createdTime,
+	})
+
+	if err != nil {
+		response.Fail(c, consts.BusinessErrorUserSave, err, nil)
+	} else {
+		response.Success(c, map[string]int64{
+			"userId": userId,
+		})
+	}
 }

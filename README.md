@@ -4,4 +4,5 @@
 - go get -u github.com/gin-gonic/gin
 - go get -u github.com/spf13/viper
 - go get -u gorm.io/gorm
-- go get -u gorm.io/driver/mysql
+- go get -u gorm.io/driver/mysql 
+- go get github.com/go-playground/validator/v10 [验证器](https://godoc.org/github.com/go-playground/validator)

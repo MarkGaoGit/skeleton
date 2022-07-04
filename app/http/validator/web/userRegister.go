@@ -9,7 +9,11 @@ import (
 )
 
 type UserRegister struct {
-	Phone string `form:"phone" json:"phone" binding:"required"`
+	Phone    string `form:"phone" json:"phone" binding:"required,len=11"`
+	UserName string `form:"userName" json:"userName" binding:"required,min=4,max=200"`
+	Password string `form:"password" json:"password" binding:"required,min=6,max=10"`
+	OpenId   string `form:"openId" json:"openId" binding:"required,len=32"`
+	Photo    string `form:"photo" json:"photo" binding:"required,url"`
 }
 
 func (r UserRegister) CheckParams(c *gin.Context) {

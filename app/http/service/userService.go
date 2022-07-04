@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"skeleton/app/global/consts"
 	"skeleton/app/global/variable"
 	"skeleton/app/model"
 	"time"
@@ -11,12 +13,11 @@ type UserInfoAll struct {
 	Id            int64     `json:"id"`
 	Phone         string    `json:"phone"`
 	UserName      string    `json:"user_name"`
-	Password      string    `json:"password"`
 	Status        int       `json:"status"`
 	RegTime       time.Time `json:"reg_time"`
 	LastLoginTime time.Time `json:"last_login_time"`
 	CreatedTime   time.Time `json:"created_time"`
-	UpdateTime    time.Time `json:"update_time"`
+	UpdatedTime   time.Time `json:"updated_time"`
 	Uid           int64     `json:"uid"`
 	OpenId        string    `json:"open_id"`
 	BindTime      time.Time `json:"bind_time"`
@@ -64,4 +65,44 @@ func GetUserById(userId int64) interface{} {
 		return variable.DefaultReturnData
 	}
 
+}
+
+// UserRegister 用户注册
+func UserRegister(user map[string]string) (int64, error) {
+	var err error
+
+	userBaseInfo := &model.UserModel{
+		UserName:    user["userName"],
+		Phone:       user["phone"],
+		Password:    user["password"],
+		RegTime:     user["createdTime"],
+		CreatedTime: user["createdTime"],
+		UpdatedTime: user["createdTime"],
+	}
+
+	//事务开启
+	db := variable.GormDbMysql.Begin()
+
+	saved := db.Omit("id", "last_login_time").Create(&userBaseInfo)
+	if saved.RowsAffected < 1 {
+		err = errors.New(consts.BusinessErrorMap[consts.BusinessErrorUserSave] + saved.Error.Error())
+		db.Rollback()
+		return userBaseInfo.Id, err
+	}
+
+	userAffiliatedData := &model.UserAffiliated{
+		Uid:      userBaseInfo.Id,
+		OpenId:   user["openId"],
+		BindTime: user["createdTime"],
+		Photo:    user["photo"],
+	}
+	saved = db.Create(userAffiliatedData)
+	if saved.RowsAffected < 1 {
+		err = errors.New(consts.BusinessErrorMap[consts.BusinessErrorUserSave] + saved.Error.Error())
+		db.Rollback()
+		return userBaseInfo.Id, err
+	}
+
+	db.Commit()
+	return userBaseInfo.Id, nil
 }

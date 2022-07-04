@@ -26,8 +26,8 @@ func DataAddContext(validatorInterface interf.ValidatorInterface, extraAddDataPr
 				}
 				// 此外给上下文追加三个键：created_at  、 updated_at ，实际根据需要自己选择获取相关键值
 				curDateTime := time.Now().Format(variable.DateFormat)
-				context.Set(extraAddDataPrefix+"created_at", curDateTime)
-				context.Set(extraAddDataPrefix+"updated_at", curDateTime)
+				context.Set(extraAddDataPrefix+"createdTime", curDateTime)
+				context.Set(extraAddDataPrefix+"updatedTime", curDateTime)
 				return context
 			}
 		}
