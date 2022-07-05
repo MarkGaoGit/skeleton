@@ -1,13 +1,16 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"skeleton/app/global/consts"
 	"skeleton/app/global/variable"
 	"skeleton/app/model"
 	"skeleton/app/utils/encrypt"
 	"skeleton/app/utils/localTime"
+	"skeleton/app/utils/redisMe"
 	"skeleton/app/utils/stringMe"
+	"time"
 )
 
 // UserInfoAll 用户的所有信息
@@ -110,6 +113,7 @@ func UserRegister(user map[string]string) (int64, error) {
 }
 
 // UserLogin 用户登陆
+// @desc 并没有对token未失效就登陆进行检查 只是redis的使用方法示例
 func UserLogin(phone, password, LoginTime string) (interface{}, error) {
 	var err error
 	var userM model.UserModel
@@ -129,14 +133,24 @@ func UserLogin(phone, password, LoginTime string) (interface{}, error) {
 		return nil, err
 	}
 
-	token := encrypt.MD5(stringMe.RandomStr(20))
+	//生成一个随机的touKen
+	token := encrypt.MD5(stringMe.RandomStr(20) + time.Now().String())
 
-	// todo 用户信息json后存入redis
+	//用户信息json后存入redis
+	jsonData, _ := json.Marshal(&userM)
+	err = (new(redisMe.Client)).SetKey(
+		consts.CacheUserTokenPrefix+token,
+		string(jsonData),
+		time.Duration(consts.CacheUserTokenTTL)*time.Second,
+	)
+	if err != nil {
+		return nil, err
+	}
 
 	go variable.GormDbMysql.Model(&userM).Update("last_login_time", LoginTime)
 
 	return map[string]interface{}{
 		"token": token,
-		"ttl":   7200,
+		"ttl":   consts.CacheUserTokenTTL,
 	}, nil
 }

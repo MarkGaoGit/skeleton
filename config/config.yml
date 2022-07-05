@@ -15,3 +15,11 @@ Mysql:
   Password: "123456"
   Charset: "utf8mb4"
   Databases: "skeleton"
+
+# Redis配置
+Redis:
+  Host: "127.0.0.1"
+  Port: 6379
+  Password: ""
+  Db: 10
+  MaxRetries: 2   # 最大重连次数

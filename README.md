@@ -9,3 +9,4 @@
 - go get -u gorm.io/gorm
 - go get -u gorm.io/driver/mysql 
 - go get github.com/go-playground/validator/v10 [验证器](https://godoc.org/github.com/go-playground/validator)
+- go get github.com/go-redis/redis/v8 使用了v8版本
