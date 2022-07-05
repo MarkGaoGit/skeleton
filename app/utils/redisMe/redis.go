@@ -15,6 +15,16 @@ type Client struct {
 	rc *redis.Client
 }
 
+// GetKey 获取一个Key
+func (c Client) GetKey(k string) (string, error) {
+	err := c.Connect()
+	if err != nil {
+		return "", err
+	}
+	defer c.Close()
+	return c.rc.Get(ctx, k).Result()
+}
+
 // SetKey 设置一个Key
 func (c Client) SetKey(k, v string, ttl time.Duration) error {
 	err := c.Connect()

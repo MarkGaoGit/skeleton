@@ -5,6 +5,7 @@ import (
 	"skeleton/app/global/consts"
 	"skeleton/app/http/controller/web"
 	_ "skeleton/app/http/controller/web"
+	mManager "skeleton/app/http/middleware/manager"
 	validatorFactory "skeleton/app/http/validator/core/factory"
 	"skeleton/app/utils/response"
 )
@@ -18,13 +19,16 @@ func InitWebRouters() *gin.Engine {
 		response.Success(c, "This is Web")
 	})
 
-	manager := r.Group("/manager")
+	manager := r.Group("/manager").
+		Use(mManager.CheckToken())
 	{
 		manager.GET("/user/list", (&web.Users{}).UserLists)
 		manager.GET("/user/:uid", (&web.Users{}).UserDetail)
 		manager.POST("/user/register", validatorFactory.Create(consts.ValidatorPrefix+"UserRegister"))
-		manager.POST("/user/login", validatorFactory.Create(consts.ValidatorPrefix+"UserLogin"))
 	}
+
+	//不需要中间件
+	r.POST("/user/login", validatorFactory.Create(consts.ValidatorPrefix+"UserLogin"))
 
 	return r
 }

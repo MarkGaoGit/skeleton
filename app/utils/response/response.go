@@ -17,6 +17,7 @@ func Success(c *gin.Context, data interface{}) {
 // Fail 失败返回
 func Fail(c *gin.Context, businessCode int, err error, data interface{}) {
 	ReturnJson(c, http.StatusBadRequest, businessCode, err.Error(), data)
+	c.Abort()
 }
 
 // ReturnJson 返回Json格式的数据
@@ -38,14 +39,14 @@ func ErrorSystem(c *gin.Context, msg string, data interface{}) {
 func ValidatorError(c *gin.Context, err error) {
 	if errs, ok := err.(validator.ValidationErrors); ok {
 		wrongParam := validatorTranslation.RemoveTopStruct(errs.Translate(validatorTranslation.Trans))
-		ReturnJson(c, http.StatusBadRequest, consts.RequestParamsError, "参数错误", wrongParam)
+		ReturnJson(c, http.StatusBadRequest, consts.RequestErrorParams, "参数错误", wrongParam)
 	} else {
 		errStr := err.Error()
 		// multipart:nextpart:eof 错误表示验证器需要一些参数，但是调用者没有提交任何参数
 		if strings.ReplaceAll(strings.ToLower(errStr), " ", "") == "multipart:nextpart:eof" {
-			ReturnJson(c, http.StatusBadRequest, consts.RequestParamsError, "参数错误", nil)
+			ReturnJson(c, http.StatusBadRequest, consts.RequestErrorParams, "参数错误", nil)
 		} else {
-			ReturnJson(c, http.StatusBadRequest, consts.RequestParamsError, "参数错误", gin.H{"tips": errStr})
+			ReturnJson(c, http.StatusBadRequest, consts.RequestErrorParams, "参数错误", gin.H{"tips": errStr})
 		}
 	}
 	c.Abort()
