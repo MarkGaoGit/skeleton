@@ -5,7 +5,9 @@ import (
 	"skeleton/app/global/consts"
 	"skeleton/app/global/variable"
 	"skeleton/app/model"
+	"skeleton/app/utils/encrypt"
 	"skeleton/app/utils/localTime"
+	"skeleton/app/utils/stringMe"
 )
 
 // UserInfoAll 用户的所有信息
@@ -105,4 +107,36 @@ func UserRegister(user map[string]string) (int64, error) {
 
 	db.Commit()
 	return userBaseInfo.Id, nil
+}
+
+// UserLogin 用户登陆
+func UserLogin(phone, password, LoginTime string) (interface{}, error) {
+	var err error
+	var userM model.UserModel
+
+	where := &model.UserModel{
+		Phone: phone,
+	}
+
+	res := variable.GormDbMysql.Where(where).Limit(1).Find(&userM)
+	if res.RowsAffected == 0 {
+		err = errors.New(consts.BusinessErrorMap[consts.BusinessErrorUserNotFund] + res.Error.Error())
+		return nil, err
+	}
+
+	if userM.Password != encrypt.Sha256(password) {
+		err = errors.New(consts.BusinessErrorMap[consts.BusinessErrorUserPassword])
+		return nil, err
+	}
+
+	token := encrypt.MD5(stringMe.RandomStr(20))
+
+	// todo 用户信息json后存入redis
+
+	go variable.GormDbMysql.Model(&userM).Update("last_login_time", LoginTime)
+
+	return map[string]interface{}{
+		"token": token,
+		"ttl":   7200,
+	}, nil
 }

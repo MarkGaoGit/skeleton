@@ -23,6 +23,7 @@ func InitWebRouters() *gin.Engine {
 		manager.GET("/user/list", (&web.Users{}).UserLists)
 		manager.GET("/user/:uid", (&web.Users{}).UserDetail)
 		manager.POST("/user/register", validatorFactory.Create(consts.ValidatorPrefix+"UserRegister"))
+		manager.POST("/user/login", validatorFactory.Create(consts.ValidatorPrefix+"UserLogin"))
 	}
 
 	return r

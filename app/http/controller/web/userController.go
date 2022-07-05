@@ -62,3 +62,17 @@ func (u *Users) UserRegister(c *gin.Context) {
 		})
 	}
 }
+
+// UserLogin 用户登陆
+func (u *Users) UserLogin(c *gin.Context) {
+	phone := c.GetString(consts.ValidatorPrefix + "phone")
+	password := c.GetString(consts.ValidatorPrefix + "password")
+	loginTime := c.GetString(consts.ValidatorPrefix + "createdTime")
+
+	login, err := service.UserLogin(phone, password, loginTime)
+	if err != nil {
+		response.Fail(c, consts.BusinessErrorUserLoginFail, err, nil)
+	} else {
+		response.Success(c, login)
+	}
+}
