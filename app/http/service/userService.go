@@ -5,24 +5,24 @@ import (
 	"skeleton/app/global/consts"
 	"skeleton/app/global/variable"
 	"skeleton/app/model"
-	"time"
+	"skeleton/app/utils/localTime"
 )
 
 // UserInfoAll 用户的所有信息
 type UserInfoAll struct {
-	Id            int64     `json:"id"`
-	Phone         string    `json:"phone"`
-	UserName      string    `json:"user_name"`
-	Status        int       `json:"status"`
-	RegTime       time.Time `json:"reg_time"`
-	LastLoginTime time.Time `json:"last_login_time"`
-	CreatedTime   time.Time `json:"created_time"`
-	UpdatedTime   time.Time `json:"updated_time"`
-	Uid           int64     `json:"uid"`
-	OpenId        string    `json:"open_id"`
-	BindTime      time.Time `json:"bind_time"`
-	VipLevel      int       `json:"vip_level"`
-	Photo         string    `json:"photo"`
+	Id            int64               `json:"id"`
+	Phone         string              `json:"phone"`
+	UserName      string              `json:"user_name"`
+	Status        int                 `json:"status"`
+	RegTime       localTime.LocalTime `json:"reg_time"`
+	LastLoginTime localTime.LocalTime `json:"last_login_time"`
+	CreatedTime   localTime.LocalTime `json:"created_time"`
+	UpdatedTime   localTime.LocalTime `json:"updated_time"`
+	Uid           int64               `json:"uid"`
+	OpenId        string              `json:"open_id"`
+	BindTime      localTime.LocalTime `json:"bind_time"`
+	VipLevel      int                 `json:"vip_level"`
+	Photo         string              `json:"photo"`
 }
 
 // GetUserList 用户列表查询
