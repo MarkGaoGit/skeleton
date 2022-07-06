@@ -25,3 +25,11 @@
 1. 添加日志
 2. 错误统一处理捕捉
 3. redis的初始化优化
+
+
+### 编译
+#### Linux 
+- CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o LinuxWebServer cmd/web/main.go
+
+#### mac
+- go build -o skeleton cmd/web/main.go
