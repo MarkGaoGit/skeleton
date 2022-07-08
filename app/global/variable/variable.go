@@ -1,6 +1,7 @@
 package variable
 
 import (
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"os"
 	"skeleton/app/utils/ymlConfig/ymlconfigInterf"
@@ -14,6 +15,8 @@ var (
 	ConfigYml ymlconfigInterf.YmlConfigInterf // 全局配置文件指针
 
 	GormDbMysql *gorm.DB //数据库指针
+
+	ZapLog *zap.Logger //日志
 )
 
 func init() {

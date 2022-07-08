@@ -19,7 +19,7 @@ func CreateYamlFactory(fileName ...string) ymlconfigInterf.YmlConfigInterf {
 	v := viper.New()
 	v.AddConfigPath(variable.BasePath + "/config")
 	if len(fileName) == 0 {
-		v.SetConfigName("config")
+		v.SetConfigName("dev")
 	} else {
 		v.SetConfigName(fileName[0])
 	}
@@ -27,7 +27,7 @@ func CreateYamlFactory(fileName ...string) ymlconfigInterf.YmlConfigInterf {
 	v.SetConfigType("yml")
 
 	if err := v.ReadInConfig(); err != nil {
-		log.Fatal("初始化配置文件发生错误" + err.Error())
+		log.Fatal("初始化配置文件发生错误，服务启动需使用：dev、test、stage、prod其中一个配置" + err.Error())
 	}
 
 	return &ymlConfig{

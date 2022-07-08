@@ -9,15 +9,20 @@ import (
 )
 
 // GetOneMysqlClient 获取一个Mysql数据库实例
-func GetOneMysqlClient() (*gorm.DB, error) {
+func GetOneMysqlClient(key string) (*gorm.DB, error) {
+
+	if key == "" {
+		key = "Default"
+	}
+
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=true&loc=Local",
-		variable.ConfigYml.GetString("Mysql.User"),
-		variable.ConfigYml.GetString("Mysql.Password"),
-		variable.ConfigYml.GetString("Mysql.Host"),
-		variable.ConfigYml.GetInt("Mysql.Port"),
-		variable.ConfigYml.GetString("Mysql.Databases"),
-		variable.ConfigYml.GetString("Mysql.Charset"),
+		variable.ConfigYml.GetString("Mysql."+key+".User"),
+		variable.ConfigYml.GetString("Mysql."+key+".Password"),
+		variable.ConfigYml.GetString("Mysql."+key+".Host"),
+		variable.ConfigYml.GetInt("Mysql."+key+".Port"),
+		variable.ConfigYml.GetString("Mysql."+key+".Databases"),
+		variable.ConfigYml.GetString("Mysql."+key+".Charset"),
 	)
 	client, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{

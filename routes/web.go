@@ -3,16 +3,27 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"skeleton/app/global/consts"
+	"skeleton/app/global/variable"
 	"skeleton/app/http/controller/web"
 	_ "skeleton/app/http/controller/web"
 	mManager "skeleton/app/http/middleware/manager"
 	validatorFactory "skeleton/app/http/validator/core/factory"
+	"skeleton/app/utils/ginRelease"
 	"skeleton/app/utils/response"
 )
 
 // InitWebRouters 初始化路由
 func InitWebRouters() *gin.Engine {
-	r := gin.Default()
+	var r *gin.Engine
+	if variable.ConfigYml.GetString("AppEnv") != "dev" {
+		//非开发模式
+		//gin.DisableConsoleColor()
+		//f, _ := os.Create(variable.BasePath + variable.ConfigYml.GetString("Logs.GinLogName"))
+		//gin.DefaultWriter = io.MultiWriter(f)
+		r = ginRelease.ReleaseRouter()
+	}
+
+	r = gin.Default()
 
 	//默认路由
 	r.GET("/", func(c *gin.Context) {

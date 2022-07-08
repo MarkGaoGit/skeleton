@@ -19,6 +19,7 @@
 - go get -u gorm.io/driver/mysql 
 - go get github.com/go-playground/validator/v10 [验证器](https://godoc.org/github.com/go-playground/validator)
 - go get github.com/go-redis/redis/v8 使用了v8版本
+- go get -u go.uber.org/zap 日志组件
 
 
 ### 待改进项
