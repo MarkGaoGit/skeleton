@@ -147,7 +147,10 @@ func UserLogin(phone, password, LoginTime string) (interface{}, error) {
 		return nil, err
 	}
 
+	// 正常的Done方法应该再具体的协程函数中
+	variable.RoutineWg.Add(1)
 	go variable.GormDbMysql.Model(&userM).Update("last_login_time", LoginTime)
+	variable.RoutineWg.Done()
 
 	return map[string]interface{}{
 		"token": token,

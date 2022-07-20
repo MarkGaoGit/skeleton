@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"net/http"
 	"skeleton/app/global/consts"
+	"skeleton/app/global/variable"
 	"skeleton/app/utils/validatorTranslation"
 	"strings"
 )
@@ -22,6 +23,7 @@ func Fail(c *gin.Context, businessCode int, err error, data interface{}) {
 
 // ReturnJson 返回Json格式的数据
 func ReturnJson(c *gin.Context, httpCode int, businessCode int, msg string, result interface{}) {
+	variable.RoutineWg.Wait()
 	c.JSON(httpCode, gin.H{
 		"code": businessCode,
 		"msg":  msg,
